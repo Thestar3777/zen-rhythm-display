@@ -227,7 +227,7 @@ export const HeroFuturistic = ({
             textTransform: 'uppercase'
           }}>
           
-          SleepFM Clinical
+          Circadia
         </span>
       </nav>
 

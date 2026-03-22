@@ -135,7 +135,7 @@ const InstructionsOverlay = ({ onStart }: InstructionsOverlayProps) => {
             textTransform: 'uppercase' as const
           }}>
           
-          SleepFM Clinical
+          Circadia
         </span>
       </nav>
 

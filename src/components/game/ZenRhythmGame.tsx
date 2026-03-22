@@ -228,7 +228,7 @@ const ZenRhythmGame = () => {
               textTransform: 'uppercase' as const,
             }}
           >
-            SleepFM Clinical
+            Circadia
           </span>
         </nav>
 

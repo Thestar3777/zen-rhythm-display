@@ -28,7 +28,7 @@ const AnalysisDashboard = () => {
             letterSpacing: '0.08em',
             textTransform: 'uppercase' as const
           }}>
-          SleepFM Clinical
+          Circadia
         </span>
       </nav>
       <div className="max-w-5xl mx-auto px-6 py-12 md:px-12">

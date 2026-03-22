@@ -46,6 +46,7 @@ const ZenRhythmGame = () => {
   const startTimeRef = useRef(performance.now());
   const touchStartY = useRef<number | null>(null);
   const lastActionTime = useRef(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Precise animation loop — only runs when instructions are dismissed
   useEffect(() => {
@@ -67,6 +68,37 @@ const ZenRhythmGame = () => {
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [showInstructions]);
+
+  // Audio management — play bird sound when game starts, stop when instructions/menu visible
+  useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio("/birdSound.mp3");
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.5;
+    }
+
+    if (!showInstructions && !gameOver) {
+      audioRef.current.play().catch(() => {
+        // Autoplay might be blocked, ignore
+      });
+    } else {
+      audioRef.current.pause();
+    }
+
+    return () => {
+      audioRef.current?.pause();
+    };
+  }, [showInstructions, gameOver]);
+
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    };
+  }, []);
 
   const clearNextCloud = useCallback(() => {
     setClouds((prev) => {

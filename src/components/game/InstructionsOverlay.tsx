@@ -27,6 +27,16 @@ const MiniOrb = () => {
   const brightness = phase <= 0.5 ? 0.4 + phase * 1.2 : 1.0 - (phase - 0.5) * 1.2;
   const isPeak = Math.abs(phase - 0.5) < 0.08;
   const isExhale = phase > 0.55;
+  const isFullyExtended = phase >= 0.45 && phase <= 0.55;
+
+  const ambientColor = isFullyExtended ? "hsl(200, 90%, 55%, 0.25)" : "hsl(160, 90%, 55%, 0.25)";
+  const glowColor = isFullyExtended ? "hsl(200, 95%, 55%, 0.3)" : "hsl(160, 95%, 55%, 0.3)";
+  const coreGradient = isFullyExtended 
+    ? `radial-gradient(circle at 38% 32%, hsl(200, 95%, 60%, 1), hsl(200, 90%, 50%, 0.7) 55%, hsl(200, 80%, 40%, 0.3) 80%, transparent)`
+    : `radial-gradient(circle at 38% 32%, hsl(160, 95%, 60%, 1), hsl(168, 90%, 50%, 0.7) 55%, hsl(174, 80%, 40%, 0.3) 80%, transparent)`;
+  const boxShadowColor = isFullyExtended
+    ? `0 0 ${40 * brightness}px hsl(200, 95%, 55%, 0.6), 0 0 ${80 * brightness}px hsl(200, 85%, 48%, 0.25), inset 0 0 ${20 * brightness}px hsl(200, 90%, 65%, 0.3)`
+    : `0 0 ${40 * brightness}px hsl(160, 95%, 55%, 0.6), 0 0 ${80 * brightness}px hsl(168, 85%, 48%, 0.25), inset 0 0 ${20 * brightness}px hsl(160, 90%, 65%, 0.3)`;
 
   return (
     <div className="relative flex items-center justify-center" style={{ width: 140, height: 140 }}>
@@ -41,7 +51,7 @@ const MiniOrb = () => {
         style={{
           width: 140,
           height: 140,
-          background: `radial-gradient(circle, hsl(160, 90%, 55%, 0.25) 0%, hsl(168, 85%, 48%, 0.08) 50%, transparent 70%)`,
+          background: ambientColor,
           filter: "blur(20px)"
         }} />
       
@@ -51,7 +61,7 @@ const MiniOrb = () => {
         style={{
           width: 130 * scale,
           height: 130 * scale,
-          background: `radial-gradient(circle, hsl(160, 95%, 55%, 0.3) 0%, transparent 65%)`,
+          background: glowColor,
           filter: `blur(${18 * brightness}px)`
         }} />
       
@@ -61,12 +71,8 @@ const MiniOrb = () => {
         style={{
           width: 90 * scale,
           height: 90 * scale,
-          background: `radial-gradient(circle at 38% 32%, hsl(160, 95%, 60%, 1), hsl(168, 90%, 50%, 0.7) 55%, hsl(174, 80%, 40%, 0.3) 80%, transparent)`,
-          boxShadow: `
-            0 0 ${40 * brightness}px hsl(160, 95%, 55%, 0.6),
-            0 0 ${80 * brightness}px hsl(168, 85%, 48%, 0.25),
-            inset 0 0 ${20 * brightness}px hsl(160, 90%, 65%, 0.3)
-          `
+          background: coreGradient,
+          boxShadow: boxShadowColor
         }} />
       
       {/* Peak indicator */}
@@ -79,6 +85,25 @@ const MiniOrb = () => {
         style={{ width: 56, height: 56 }} />
 
       }
+
+      {/* "Tap" text when orb is fully extended */}
+      {isFullyExtended && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
+          className="absolute text-center font-bold"
+          style={{
+            color: "rgba(255, 255, 255, 0.9)",
+            fontSize: "0.75rem",
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+          }}
+        >
+          tap
+        </motion.div>
+      )}
+
       {/* Exhale arrow */}
       {isExhale &&
       <motion.div
@@ -93,6 +118,7 @@ const MiniOrb = () => {
       }
     </div>);
 
+
 };
 
 const steps = [
@@ -102,7 +128,7 @@ const steps = [
 },
 {
   label: "Tap at Peak",
-  description: "Tap the screen or press Space when the orb reaches its maximum size. Timing is everything."
+  description: "Tap the screen or press Space when the orb reaches its maximum size and turns blue. The word 'Tap' will appear in the center. Timing is everything."
 },
 {
   label: "Swipe on Exhale",
@@ -150,12 +176,7 @@ const InstructionsOverlay = ({ onStart }: InstructionsOverlayProps) => {
         <div className="flex flex-col items-center gap-4 md:gap-6 md:flex-1">
           {/* Title */}
           <div className="flex flex-col items-center gap-1 text-sm">
-            <h1
-                className="md:text-4xl tracking-tight text-foreground text-3xl font-semibold"
-                style={{ fontFamily: "Arial, Helvetica, sans-serif", textShadow: "0 0 24px hsl(var(--glow-cyan) / 0.35)" }}>
-              Zen Rhythm
-            </h1>
-            <p className="md:text-sm tracking-[0.25em] uppercase text-muted-foreground text-base font-semibold"
+            <p className="md:text-2xl text-white text-lg font-semibold"
               style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
               How to play
             </p>

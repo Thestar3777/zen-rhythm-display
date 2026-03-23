@@ -9,7 +9,7 @@ import N1Map, { type GlitchMark } from "./N1Map";
 import InstructionsOverlay from "./InstructionsOverlay";
 
 const CYCLE_DURATION = 10000; // 10s = 0.1Hz
-const PERFECT_WINDOW = 400; // ±400ms around peak
+const PERFECT_WINDOW = 600; // ±600ms around peak (increased grace time)
 const SWIPE_THRESHOLD = 50; // px
 
 const initialClouds: Cloud[] = [
@@ -148,7 +148,7 @@ const ZenRhythmGame = () => {
 
   const checkTapTiming = useCallback(() => {
     const now = performance.now();
-    if (now - lastActionTime.current < 800) return; // debounce
+    if (now - lastActionTime.current < 600) return; // debounce (increased grace time)
     lastActionTime.current = now;
 
     const elapsed = (now - startTimeRef.current) % CYCLE_DURATION;
@@ -162,7 +162,7 @@ const ZenRhythmGame = () => {
 
   const handleSwipe = useCallback(() => {
     const now = performance.now();
-    if (now - lastActionTime.current < 800) return;
+    if (now - lastActionTime.current < 600) return; // debounce (increased grace time)
     lastActionTime.current = now;
 
     const elapsed = (now - startTimeRef.current) % CYCLE_DURATION;

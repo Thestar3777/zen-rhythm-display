@@ -17,9 +17,10 @@ const BreathOrb = ({ phase, feedbackState, showPulse }: BreathOrbProps) => {
 
   const isOffbeat = feedbackState === "offbeat";
   const isPerfect = feedbackState === "perfect";
+  const isFullyExtended = phase >= 0.45 && phase <= 0.55;
 
-  const coreHsl = isOffbeat ? "0, 65%, 45%" : "168, 70%, 36%";
-  const brightHsl = isOffbeat ? "0, 70%, 50%" : isPerfect ? "162, 80%, 44%" : "166, 72%, 40%";
+  const coreHsl = isOffbeat ? "0, 65%, 45%" : isFullyExtended ? "200, 80%, 35%" : "168, 70%, 36%";
+  const brightHsl = isOffbeat ? "0, 70%, 50%" : isFullyExtended ? "200, 85%, 50%" : isPerfect ? "162, 80%, 44%" : "166, 72%, 40%";
 
   return (
     <div className="relative flex items-center justify-center">
@@ -87,6 +88,24 @@ const BreathOrb = ({ phase, feedbackState, showPulse }: BreathOrbProps) => {
             background: "hsla(0, 68%, 55%, 0.3)",
           }}
         />
+      )}
+
+      {/* "Tap" text when orb is fully extended */}
+      {isFullyExtended && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
+          className="absolute text-center font-bold"
+          style={{
+            color: "rgba(255, 255, 255, 0.9)",
+            fontSize: "1.5rem",
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+          }}
+        >
+          tap
+        </motion.div>
       )}
     </div>
   );

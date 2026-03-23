@@ -196,9 +196,9 @@ export const HeroFuturistic = ({
   children
 }: HeroFuturisticProps) => {
   const isMobile = useIsMobile();
-  // Split title into ~2 words per line on mobile, ~3 lines on desktop
+  // Split title into ~2 words per line on mobile, ~4 words per line on desktop
   const titleWords = title.split(' ');
-  const wordsPerLine = isMobile ? 2 : Math.ceil(titleWords.length / 3);
+  const wordsPerLine = isMobile ? 2 : 4;
   const titleLines = [];
   for (let i = 0; i < titleWords.length; i += wordsPerLine) {
     titleLines.push(titleWords.slice(i, i + wordsPerLine).join(' '));
@@ -206,11 +206,13 @@ export const HeroFuturistic = ({
 
   const [titleVisible, setTitleVisible] = useState(false);
   const [subtitleVisible, setSubtitleVisible] = useState(false);
+  const [ctaVisible, setCtaVisible] = useState(false);
 
   useEffect(() => {
     const t1 = setTimeout(() => setTitleVisible(true), 300);
     const t2 = setTimeout(() => setSubtitleVisible(true), 1100);
-    return () => {clearTimeout(t1);clearTimeout(t2);};
+    const t3 = setTimeout(() => setCtaVisible(true), 1500);
+    return () => {clearTimeout(t1);clearTimeout(t2);clearTimeout(t3);};
   }, []);
 
   return (
@@ -289,7 +291,13 @@ export const HeroFuturistic = ({
 
         {/* Children (e.g. CTA buttons) */}
         {children &&
-        <div className="mt-8 pointer-events-auto">
+        <div 
+          className="mt-8 pointer-events-auto transition-all duration-700 flex justify-center"
+          style={{
+            opacity: ctaVisible ? 1 : 0,
+            transform: ctaVisible ? 'translateY(0)' : 'translateY(10px)',
+            filter: ctaVisible ? 'blur(0px)' : 'blur(4px)'
+          }}>
             {children}
           </div>
         }
@@ -297,10 +305,14 @@ export const HeroFuturistic = ({
 
       {/* Scroll indicator */}
       <div
-        className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10 flex flex-col md:flex-row items-center gap-1.5 md:gap-3 px-6 py-2.5 md:py-3 rounded-full pointer-events-auto cursor-pointer group transition-all duration-300 hover:scale-105 active:scale-[0.97]"
+        className="absolute bottom-24 left-1/2 z-10 flex flex-col md:flex-row items-center gap-1.5 md:gap-3 px-6 py-2.5 md:py-3 rounded-full pointer-events-auto cursor-pointer group transition-all duration-700 hover:scale-105 active:scale-[0.97]"
         style={{
           border: '1px solid rgba(94,234,212,0.2)',
-          background: 'rgba(94,234,212,0.03)'
+          background: 'rgba(94,234,212,0.03)',
+          opacity: ctaVisible ? 1 : 0,
+          transform: ctaVisible ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(10px)',
+          filter: ctaVisible ? 'blur(0px)' : 'blur(4px)',
+          pointerEvents: ctaVisible ? 'auto' : 'none'
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.borderColor = 'rgba(94,234,212,0.45)';
